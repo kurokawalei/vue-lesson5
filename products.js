@@ -1,12 +1,27 @@
 
      
-      import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js';
+    //   import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js';
+      
       import pageinfo from './page.js';
 
 
+      Object.keys(VeeValidateRules).forEach(rule => {
+        if (rule !== 'default') {
+          VeeValidate.defineRule(rule, VeeValidateRules[rule]);
+        }
+      });
 
+      VeeValidateI18n.loadLocaleFromURL('./zh_Tw.json');
 
-       const app = createApp( {
+        // Activate the locale
+        VeeValidate.configure({
+        generateMessage: VeeValidateI18n.localize('zh_TW'),
+        validateOnInput: true, // 調整為輸入字元立即進行驗證
+        });
+    
+  
+
+       const app = Vue.createApp( {
 
         data(){
             
@@ -19,6 +34,15 @@
                 carData:{},
                 productId:'',
                 isloading:false,
+                form: {
+                    user: {
+                      name: '',
+                      email: '',
+                      tel: '',
+                      address: '',
+                    },
+                    message: '',
+                  },
     
             }
         },
@@ -49,7 +73,7 @@
                 .then( (res) => {
                  
                    this.carData = res.data.data;
-                   console.log( res );
+                   //console.log( res );
                     
                     
                 })
@@ -81,13 +105,13 @@
 
                     this.isloading = id;
 
-
                     axios.post(`${this.apiUrl}/v2/api/${this.apiPach}/cart` , {data})
                     .then( (res) => {
-        
-                    
+                     alert(res.data.message);   
                      this.getCarsDataList();
                      this.isloading = '';
+
+                     this.$refs.productModal.closetheModalfn();
 
                     })
                     .catch((er) => {
@@ -127,15 +151,17 @@
 
             removeItem(id){
 
+                this.isloading =  id;
+
 
                 axios.delete(`${this.apiUrl}/v2/api/${this.apiPach}/cart/${id}`)
                 .then( (res)=> {
 
-                 
-
-                  
                     alert(res.data.message);
                      this.getCarsDataList();
+                      this.isloading = '';
+                  
+             
 
                 })
                 .catch((er)=> {
@@ -161,7 +187,35 @@
                 } )
 
 
+            },
+            send(){
+
+              
+                const order =  this.form;
+
+
+                axios.post(`${this.apiUrl}/v2/api/${this.apiPach}/order` , { data: order } )
+                .then((res)=> {
+
+               
+                alert(res.data.message);
+
+                //重置表單+購物車列表
+               
+               
+                this.$refs.form.resetForm();
+                this.getCarsDataList();
+
+
+                })
+                .catch( (er)=> {
+                    alert(er.data.message);
+                } )
+
+
+
             }
+
     
     
         },
@@ -174,6 +228,8 @@
     
             this.getProductList();
             this.getCarsDataList();
+
+         
     
         }
     
@@ -190,6 +246,7 @@
                     apiUrl:'https://vue3-course-api.hexschool.io',
                     apiPach:'kurokawa2021',
                     modal:'',
+                    isloading:false,
                     product:{},
                     qty:1
 
@@ -200,7 +257,9 @@
                 //如果函式名稱id變動觸發
 
                 id(){
+                    
                     this.getProduct();
+
                 }
 
             },
@@ -211,14 +270,19 @@
                 opentheModalfn(){
                     this.modal.show();                  
                 },
+                closetheModalfn(){
+                    this.modal.hide();                  
+                },
                 getProduct(){
+
+
 
                     axios.get(`${this.apiUrl}/v2/api/${this.apiPach}/product/${this.id}`)
                     .then( (res) => {
         
                         this.product = res.data.product;
 
-                        console.log(this.product);
+                       // console.log(this.product);
                        
                         
                     })
@@ -228,8 +292,11 @@
 
                 },
                 addToCar(){
-                    this.$emit('add-car' , this.product.id , this.qty )
-                }
+                    this.$emit('add-car' , this.product.id , this.qty );
+                },
+              
+              
+                
 
 
             },
@@ -248,7 +315,9 @@
         } );
 
 
-
+        app.component('VForm', VeeValidate.Form);
+        app.component('VField', VeeValidate.Field);
+        app.component('ErrorMessage', VeeValidate.ErrorMessage);
 
 
      
