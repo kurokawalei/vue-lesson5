@@ -31,7 +31,9 @@
                 apiPach:'kurokawa2021',
                 prList:[],
                 pagination:{},
-                carData:{},
+                carData:{
+                    carts:[]
+                },
                 productId:'',
                 isloading:false,
                 form: {
@@ -74,6 +76,8 @@
                  
                    this.carData = res.data.data;
                    //console.log( res );
+
+                   console.log(  this.carData.carts.length );
                     
                     
                 })

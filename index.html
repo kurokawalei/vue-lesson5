@@ -11,12 +11,7 @@
               integrity='sha512-q3eWabyZPc1XTCmF+8/LuE1ozpg5xxn7iO89yfSOd5/oKvyqLngoNGsx8jq92Y8eXJ/IRxQbEC+FGSYxtk2oiw=='
               crossorigin='anonymous' />
 
-      <style>
-
-          .btn.btn-danger {
-          padding: 0 15px;
-        }
-      </style>
+    
       </head>
 
   <body>
@@ -96,8 +91,14 @@
 
 
           <!-- 購物車列表 -->
+
+          
+         
           <div class="text-end">
-            <button class="btn btn-outline-danger" type="button"  @click="claerAll" >清空購物車</button>
+            <button class="btn btn-danger" type="button"  @click="claerAll" :disabled=" carData.carts.length === 0 ">清空購物車</button>
+            
+          
+
           </div>
          
           <table class="table align-middle">
@@ -110,6 +111,7 @@
               </tr>
             </thead>
             <tbody>
+            
               <template v-if="carData.carts">
                 <tr v-for="(item,i)  in  carData.carts"  :key="item.id">
                   <td>
@@ -206,7 +208,7 @@
 
 
             <div class="text-end">
-              <button type="submit" class="btn btn-danger" >送出訂單</button>
+              <button type="submit" class="btn btn-danger" :disabled=" carData.carts.length === 0 ">送出訂單</button>
             </div>
 
 
@@ -293,9 +295,7 @@
             <script src="https://unpkg.com/vee-validate@next"></script>
             <script src="https://unpkg.com/@vee-validate/i18n@4.1.0"></script>
             <script src="https://unpkg.com/@vee-validate/rules"></script>
-
-    
-    <script type="module" src="products.js"></script>
+            <script type="module" src="products.js"></script>
    
   </body>
 
