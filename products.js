@@ -2,7 +2,7 @@
      
     //   import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js';
       
-      import pageinfo from './page.js';
+      import pageinfo from './components/page.js';
 
 
       Object.keys(VeeValidateRules).forEach(rule => {
@@ -11,7 +11,7 @@
         }
       });
 
-      VeeValidateI18n.loadLocaleFromURL('./zh_Tw.json');
+      VeeValidateI18n.loadLocaleFromURL('./lang/zh_Tw.json');
 
         // Activate the locale
         VeeValidate.configure({
@@ -76,10 +76,7 @@
                  
                    this.carData = res.data.data;
                    //console.log( res );
-
-                   console.log(  this.carData.carts.length );
-                    
-                    
+ 
                 })
                 .catch((er) => {
                     console.log(er);
@@ -141,7 +138,7 @@
 
                 axios.put(`${this.apiUrl}/v2/api/${this.apiPach}/cart/${item.id}` , {data} )
                 .then( (res) => {
-                    console.log(res);
+                   // console.log(res);
                     this.getCarsDataList();       
                     this.isloading = '';             
                 })
@@ -182,7 +179,7 @@
 
                 axios.delete(`${this.apiUrl}/v2/api/${this.apiPach}/carts`)
                 .then( (res)=> {
-                    console.log(res);
+                    //console.log(res);
                     alert(res.data.message);
                     this.getCarsDataList();
                 })
