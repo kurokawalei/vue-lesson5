@@ -208,7 +208,7 @@
 
 
             <div class="text-end">
-              <button type="submit" class="btn btn-danger" :disabled=" carData.carts.length === 0 ">送出訂單</button>
+              <button type="submit" class="btn btn-danger" :disabled=" Object.keys(errors).length > 0 || carData.carts.length === 0 ">送出訂單</button>
             </div>
 
 
